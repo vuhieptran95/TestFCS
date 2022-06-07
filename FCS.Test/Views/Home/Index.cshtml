@@ -1,0 +1,29 @@
+﻿@using Microsoft.Extensions.Hosting
+@{
+    ViewData["Title"] = "Home Page";
+    var classRoom = new ClassRoom();
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to @classRoom.Name</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Student Id</th>
+            <th>Student Name</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var s in classRoom.Students)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>@s.Name</td>
+                    <td><a asp-action="Details" asp-controller="Home" asp-route-id="@s.Id" >Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
