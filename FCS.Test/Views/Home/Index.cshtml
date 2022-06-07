@@ -1,29 +1,43 @@
 ﻿@using Microsoft.Extensions.Hosting
 @{
     ViewData["Title"] = "Home Page";
-    var classRoom = new ClassRoom();
 }
+@model ClassRoom
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to @classRoom.Name</h1>
+    <h1 class="display-4">Welcome to @Model.Name</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Student Id</th>
-            <th>Student Name</th>
-            <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var s in classRoom.Students)
+    <form asp-action="UploadFiles" enctype="multipart/form-data" method="post">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Student Id</th>
+                <th>Student Name</th>
+                <th>Details</th>
+                <th>File</th>
+                <th>Image</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for(int i = 0; i < Model.Students.Count; i++)
             {
                 <tr>
-                    <td>@s.Id</td>
-                    <td>@s.Name</td>
-                    <td><a asp-action="Details" asp-controller="Home" asp-route-id="@s.Id" >Edit</a></td>
+                    <td>@Model.Students[i].Id</td>
+                    <td>@Model.Students[i].Name</td>
+                    <td>
+                        <a asp-action="Details" asp-controller="Home" asp-route-id="@Model.Students[i].Id">View</a>
+                    </td>
+                    <td>
+                        <input type="file" asp-for="Students[i].FormFile" accept=".png, .jpg, .jpeg">
+                        <input type="text" readonly="readonly" hidden="hidden" asp-for="Students[i].Id">
+                    </td>
+                    <td>
+                        <img width="250px;" src="@Model.Students[i].ImagePath"/>
+                    </td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </div>

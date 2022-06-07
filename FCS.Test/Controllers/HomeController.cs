@@ -11,6 +11,7 @@ namespace FCS.Test.Controllers
 {
     public class HomeController : Controller
     {
+        public static ClassRoom ClassRoom;
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -20,14 +21,24 @@ namespace FCS.Test.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(ClassRoom);
         }
         
         public IActionResult Details(string id)
         {
-            var classRoom = new ClassRoom();
-            var student = classRoom.Students.FirstOrDefault(s => s.Id == id);
+            var student = ClassRoom.Students.FirstOrDefault(s => s.Id == id);
             return View(student);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadFiles(List<Student> students)
+        {
+            foreach (var student in students)
+            {
+                await ClassRoom.SaveImage(student.Id, student.FormFile);
+            }
+            return View("Index", ClassRoom);
         }
 
         public IActionResult Privacy()
